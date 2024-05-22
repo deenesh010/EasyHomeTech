@@ -53,6 +53,7 @@ const CartPage = () => {
       amount: parseInt(total),
       purchase_order_id: "test12",
       purchase_order_name: "test",
+      products: cart,
       customer_info: {
         name: auth.user.name,
         email: auth.user.email,
@@ -63,7 +64,6 @@ const CartPage = () => {
       `http://localhost:8080/api/v1/khalti-api`,
       payload
     );
-    // console.log(response);
     if (response) {
       window.location.href = `${response?.data?.data?.payment_url}`;
     }

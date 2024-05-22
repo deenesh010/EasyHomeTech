@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import khaltiRouter from "./routes/khaltiRoute.js";
 import cors from "cors";
 import axios from "axios";
 
@@ -28,23 +29,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 
-app.post("/api/v1/khalti-api", async (req, res) => {
-  const payload = req.body;
-  const khaltiResponse = await axios.post(
-    "https://a.khalti.com/api/v2/epayment/initiate/",
-    payload,
-    {
-      headers: {
-        Authorization: `key ${process.env.KHALTI_SECRET_KEY}`,
-      },
-    }
-  );
-  if (khaltiResponse) {
-    res.json({ sucess: true, data: khaltiResponse?.data });
-  } else {
-    res.json({ sucess: false, message: "something went wrong" });
-  }
-});
+app.use("/api/v1/khalti-api", khaltiRouter);
 
 //rest api
 app.get("/", (req, res) => {
