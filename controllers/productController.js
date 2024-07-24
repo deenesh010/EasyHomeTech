@@ -1,6 +1,6 @@
 import productModel from "../models/productModel.js";
 import categoryModel from "../models/categoryModel.js";
-import orderModel from "../models/orderModel.js";
+import Order from "../models/orderModel.js";
 
 import fs from "fs";
 import slugify from "slugify";
@@ -326,52 +326,52 @@ export const productCategoryController = async (req, res) => {
   }
 };
 
-//payment gateway api
-//token
-// export const braintreeTokenController = async (req, res) => {
-//   try {
-//     gateway.clientToken.generate({}, function (err, response) {
-//       if (err) {
-//         res.status(500).send(err);
-//       } else {
-//         res.send(response);
-//       }
-//     });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
-//payment
-// export const brainTreePaymentController = async (req, res) => {
-//   try {
-//     const { nonce, cart } = req.body;
-//     let total = 0;
-//     cart.map((i) => {
-//       total += i.price;
-//     });
-//     let newTransaction = gateway.transaction.sale(
-//       {
-//         amount: total,
-//         paymentMethodNonce: nonce,
-//         options: {
-//           submitForSettlement: true,
-//         },
-//       },
-//       function (error, result) {
-//         if (result) {
-//           const order = new orderModel({
-//             products: cart,
-//             payment: result,
-//             buyer: req.user._id,
-//           }).save();
-//           res.json({ ok: true });
-//         } else {
-//           res.status(500).send(error);
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+
+// ---------for Report-----------------------------------------------
+
+export const generateReport = async (req, res) => {
+  try {
+    
+    const orders = await Order.find()
+      .populate('products') 
+      .populate('buyer');   
+
+    let totalOrders = orders.length;
+    let totalProducts = 0;
+    let totalOverallPrice = 0;
+
+    const report = orders.map(order => {
+      const productDetails = order.products.map(product => ({
+        productId: product._id,
+        productName: product.name, 
+        price: product.price, 
+      }));
+
+      const totalPrice = productDetails.reduce((sum, product) => sum + product.price, 0);
+      totalOverallPrice += totalPrice;
+      totalProducts += productDetails.length;
+
+      return {
+        orderId: order._id,
+        buyerId: order.buyer._id,
+        buyerName: order.buyer.name,
+        status: order.status,
+        totalPrice: totalPrice,
+        products: productDetails,
+        orderDate: order.createdAt
+      };
+    });
+
+    const finalReport = {
+      totalOrders: totalOrders,
+      totalProducts: totalProducts,
+      totalOverallPrice,
+      orders: report,
+    };
+
+    res.json(finalReport); 
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};

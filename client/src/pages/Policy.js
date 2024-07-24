@@ -13,13 +13,11 @@ const Policy = () => {
           />
         </div>
         <div className="col-md-4">
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
+          <p>
+            Welcome to Easy Home Tech, your go-to platform for buying and selling
+            home appliances. We value your privacy and are committed to
+            protecting your personal information.
+          </p>
         </div>
       </div>
     </Layout>

@@ -14,7 +14,6 @@ const AdminOrders = () => {
     "Processing",
     "Shipped",
     "deliverd",
-    "cancel",
   ]);
   const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
@@ -52,11 +51,11 @@ const AdminOrders = () => {
           <h1 className="text-center">All Orders</h1>
           {orders?.map((o, i) => {
             return (
-              <div className="border shadow">
+              <div className="border">
                 <table className="table">
                   <thead>
                     <tr>
-                      <th scope="col">#</th>
+                      <th scope="col">S.N</th>
                       <th scope="col">Status</th>
                       <th scope="col">Buyer</th>
                       <th scope="col"> date</th>
@@ -81,7 +80,8 @@ const AdminOrders = () => {
                         </Select>
                       </td>
                       <td>{o?.buyer?.name}</td>
-                      <td>{moment(o?.createAt).fromNow()}</td>
+                      <td>{moment(o?.createdAt).fromNow()}</td>
+                      {/* <td>{o.createdAt}</td> */}
                       {/* <td>{o?.payment.success ? "Success" : "Failed"}</td> */}
                       <td>{o?.payment ? "Success" : "Failed"}</td>
                       <td>{o?.products?.length}</td>
@@ -94,7 +94,7 @@ const AdminOrders = () => {
                       <div className="col-md-4">
                         <img
                           src={`/api/v1/product/product-photo/${p._id}`}
-                          className="card-img-top"
+                          className="img-fluid rounded shadow-sm product-image"
                           alt={p.name}
                           width="100px"
                           height={"100px"}
@@ -108,6 +108,7 @@ const AdminOrders = () => {
                     </div>
                   ))}
                 </div>
+                <h1>___________________________________________________________________</h1>
               </div>
             );
           })}
